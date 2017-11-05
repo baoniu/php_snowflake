@@ -22,7 +22,7 @@
 #include "config.h"
 #endif
 
-#define MAX_SEQUENCE 8191
+#define MAX_SEQUENCE 999
 
 #include <unistd.h>
 #include <string.h>
@@ -51,7 +51,7 @@ static zend_long time_re_gen(zend_long last) {
 }
 
 static zend_long get_workid() {
-	return syscall(SYS_gettid); 
+	return syscall(SYS_gettid);
 }
 
 static zend_long time_gen() {
@@ -81,14 +81,14 @@ static void next_id(char *id) {
 	if (ts < PHP_SNOWFLAKE_G(last_time_stamp)) {
 		strcpy(id, NULL);
 	} else {
-		sprintf(id, "00%ld%05ld%08ld%04d", ts, PHP_SNOWFLAKE_G(service_no), PHP_SNOWFLAKE_G(worker_id), PHP_SNOWFLAKE_G(sequence));
+		sprintf(id, "%ld%d%08ld%03d", ts, PHP_SNOWFLAKE_G(service_no), PHP_SNOWFLAKE_G(worker_id), PHP_SNOWFLAKE_G(sequence));
 	}
 }
 
 PHP_METHOD(PhpSnowFlake, nextId) {
-	char id[33];
+	char id[27];
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() 
+	if (zend_parse_parameters(ZEND_NUM_ARGS()
 #if PHP_API_VERSION < 20151012
 		TSRMLS_CC
 #endif
@@ -96,8 +96,8 @@ PHP_METHOD(PhpSnowFlake, nextId) {
 		RETURN_FALSE;
 	}
 
-	if (PHP_SNOWFLAKE_G(service_no)>99999 | PHP_SNOWFLAKE_G(service_no)<0) {
-		zend_error(E_ERROR, "service_no in the range of 0,99999");
+	if (PHP_SNOWFLAKE_G(service_no)>99 | PHP_SNOWFLAKE_G(service_no)<10) {
+		zend_error(E_ERROR, "service_no in the range of 10,99");
 	}
 
 	next_id(id);
@@ -179,7 +179,7 @@ PHP_MINIT_FUNCTION(php_snowflake)
 
 #ifdef ZTS
 	ts_allocate_id(&php_snowflake_globals_id, sizeof(zend_php_snowflake_globals), (ts_allocate_ctor)php_snowflake_ctor, NULL);
-#else	
+#else
 # if PHP_API_VERSION < 20151012
 	php_snowflake_ctor(&php_snowflake_globals TSRMLS_CC);
 # else
@@ -224,7 +224,7 @@ PHP_RINIT_FUNCTION(php_snowflake)
 	if (!PHP_SNOWFLAKE_G(worker_id)) {
 		PHP_SNOWFLAKE_G(worker_id) = get_workid();
 	}
-#endif	
+#endif
 #if defined(COMPILE_DL_PHP_SNOWFLAKE) && defined(ZTS) && PHP_API_VERSION >= 20151012
 	ZEND_TSRMLS_CACHE_UPDATE();
 #endif
@@ -247,7 +247,7 @@ PHP_MINFO_FUNCTION(php_snowflake)
 {
 	php_info_print_table_start();
 	php_info_print_table_header(2, "php_snowflake", "enabled");
-	php_info_print_table_row(2, "version", PHP_SNOWFLAKE_VERSION); 
+	php_info_print_table_row(2, "version", PHP_SNOWFLAKE_VERSION);
 	php_info_print_table_end();
 
 	/* Remove comments if you have entries in php.ini
