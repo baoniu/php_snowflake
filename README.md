@@ -41,9 +41,9 @@ make
 make install
 ```
 ## Example
-Attention： Interval of $service_no in the range of 0-99999. Beyond that scope, PHP will report a fatal mistake.
+Attention： Interval of $service_no in the range of 10-99. Beyond that scope, PHP will report a fatal mistake.
 ```
-$service_no = 999;
+$service_no = 99;
 for ($i=0; $i < 10; $i++) { 
         echo PhpSnowFlake::nextId($service_no)."\n";
 }
