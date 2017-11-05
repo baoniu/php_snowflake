@@ -59,3 +59,13 @@ for ($i=0; $i < 10; $i++) {
 Copyright (c) 2016 by [Towers](http://towers.pub) released under MIT License.
 
 
+
+```angular2html
+
+make clean 
+./configure --with-php-config=/usr/bin/php-config7.1 
+make 
+sudo make install 
+sudo service php7.1-fpm restart
+
+```
