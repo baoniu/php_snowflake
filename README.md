@@ -1,6 +1,6 @@
 # php_snowflake
 改自 https://github.com/Sxdd/php_snowflake
-将原来的32位机器码变成了26位（两个long字段存下）
+将原来的32位自增ID变成了26位（两个long字段存下）
 
 ## Requires
 * PHP >= 5.6  (Below 5.5 self-testing)
@@ -52,3 +52,6 @@ for ($i=0; $i < 10; $i++) {
 
 */
 ```
+
+
+
