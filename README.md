@@ -1,21 +1,10 @@
 # php_snowflake
-
-[中文文档](https://github.com/Sxdd/php_snowflake/wiki/%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3)
-## What is php_snowflake?
-
-Twitter distributed ID generating Algorithm [SnowFlake](https://github.com/twitter/snowflake) PHP implementation version.
+改自 https://github.com/Sxdd/php_snowflake
+将原来的32位机器码变成了26位（两个long字段存下）
 
 ## Requires
 * PHP >= 5.6  (Below 5.5 self-testing)
 * Linux
-
-## Description
-Pure PHP can not be achieved SnowFlake algorithm，because version of thread-safe(requires tid)and 
-non-thread-safe(requires pid)can not generate same the format id(The only tid of this project system, 
-so don't worried about pid conflict of multiple processes). And PHP as scripting language can not maintain sequence,
-sequence will be initialized again when the script is finished. In case of high concurrency pure PHP 
-Implemented version of  Snowflate algorithm does not have any effect. So was born this project, 
-below is the different of Thread-safe version and Non-thread-safe version.
 
 ### Non-thread-safe version (NTS)
 ```
@@ -36,10 +25,18 @@ below is the different of Thread-safe version and Non-thread-safe version.
 ## Installation
 ```
 phpize
-./configure --with-php-config=/you/phppath/php-config
-make
-make install
+./configure --with-php-config=/usr/bin/php-config7.1 
+make 
+sudo make install 
+sudo service php7.1-fpm restart
 ```
+
+###
+
+php.ini添加扩展
+
+    extension = php_snowflake.so
+    
 ## Example
 Attention： Interval of $service_no in the range of 10-99. Beyond that scope, PHP will report a fatal mistake.
 ```
@@ -55,24 +52,3 @@ for ($i=0; $i < 10; $i++) {
 
 */
 ```
-
-
-```angular2html
-
-make clean 
-phpize
-./configure --with-php-config=/usr/bin/php-config7.1 
-make 
-sudo make install 
-sudo service php7.1-fpm restart
-
-```
-###
-
-php.ini添加如下
-
-    extension = php_snowflake.so
-    
-    
-## License
-Copyright (c) 2016 by [Towers](http://towers.pub) released under MIT License.
